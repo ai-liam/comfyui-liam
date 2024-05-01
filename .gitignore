@@ -1,0 +1,13 @@
+
+__pycache__
+.idea
+*.local
+/*.zip
+.DS_Store
+env
+
+external-libraries
+.ipynb_checkpoints
+
+log_*.txt
+log.txt
