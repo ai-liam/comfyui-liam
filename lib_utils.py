@@ -6,7 +6,6 @@ import torch
 import numpy as np
 import requests
 from io import BytesIO
-import cv2
 
 
 path = os.path.dirname(os.path.realpath(__file__))
