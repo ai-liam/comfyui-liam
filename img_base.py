@@ -44,7 +44,7 @@ class LoadImage:
     CATEGORY = "Liam/Image"
 
     def execute(self,url,image):
-        print(f"""Your input contains:
+        print(f""" LoadImage Your input contains:
                 url: {url} ,
                 img: {image}
             """)

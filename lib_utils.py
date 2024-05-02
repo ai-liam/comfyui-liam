@@ -32,7 +32,7 @@ def back_image(i):
         mask = 1. - torch.from_numpy(mask)
     else:
         mask = torch.zeros((64,64), dtype=torch.float32, device="cpu")
-    print(f"2 image type: {type(image)}")
+    # print(f"2 image type: {type(image)}")
     return (image, mask.unsqueeze(0))
 
 
@@ -52,3 +52,12 @@ def convert_to_gray_and_return_tensor_pil(image_tensor):
     image_tensor = torch.from_numpy(image)[None,]
     return image_tensor
 
+# 写入 txt 文件
+def write_txt(file_path,data):
+    # print(data)
+    with open(file_path, 'w') as f:
+        # 写入文件
+        f.write(data)
+        # print('写入成功:',file_path)
+        return True
+    
