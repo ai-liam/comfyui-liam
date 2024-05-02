@@ -57,6 +57,6 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "LiamLibLoadImage": "LiamLibLoadImage",
-    "LiamLibImageToGray": "LiamLibImageToGray",
+    "LiamLibLoadImage": "LoadImage_Liam",
+    "LiamLibImageToGray": "ImageToGray_Liam",
 }
