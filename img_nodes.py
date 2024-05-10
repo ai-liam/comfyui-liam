@@ -14,6 +14,30 @@ import folder_paths
 
 
 
+class PreviewReliefImage:
+    @classmethod
+    def INPUT_TYPES(s):
+        return { "required": {
+                "image": ("IMAGE",),
+                "emboss_depth": ("INT", { "default": 60, "min": 0, "max": 100, "step": 1, }),
+                "light_angle": ("INT", { "default": 135, "min": 0, "max": 360, "step": 1, }),
+                "light_intensity": ("INT", { "default": 0.8, "min": 0, "max": 1, "step": 0.1, }),
+                "edge_threshold": ("INT", { "default": 30, "min": 0, "max": 100, "step": 5, }), 
+            }
+        }
+    RETURN_TYPES = ("IMAGE",)
+    RETURN_NAMES = ("IMAGE",)
+    FUNCTION = "execute"
+    CATEGORY = "Liam/Image"
+
+    def execute(self,image, emboss_depth, light_angle, light_intensity, edge_threshold):
+        print(f"""Your input contains:
+                image: {type(image)}
+            """)
+        outputs = lib_utils.preview_relief_image(image,emboss_depth, light_angle, light_intensity, edge_threshold)
+        return (outputs, )
+
+
 class FillImage:
     @classmethod
     def INPUT_TYPES(s):

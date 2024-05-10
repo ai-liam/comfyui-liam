@@ -17,6 +17,7 @@ NODE_CLASS_MAPPINGS = {
     "LiamLibImageToGray": img_nodes.ImageToGray,
     "LiamLibSaveImg": img_nodes.MySaveImage,
     "LiamLibFillImage": img_nodes.FillImage ,
+    "PreviewReliefImage": img_nodes.PreviewReliefImage ,
 
     "LiamLibSaveText": text_nodes.SaveText ,
 }
@@ -26,6 +27,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LiamLibImageToGray": "Image To Gray @Liam",
     "LiamLibSaveImg": "Save Image @Liam",
     "LiamLibFillImage":  "Fill Image @Liam",
+    "PreviewReliefImage": "Preview Relief Image @Liam",
 
     "LiamLibSaveText": "Save Text @Liam",
 }

@@ -100,3 +100,77 @@ def img_fill_by_img(pil_img, fill_color=(0, 0, 0, 255), fill_size=(1020, 1020)):
         return empty_img
     else:
         return pil_img
+
+
+# 将RGB图像转换为灰度图像
+def preview_relief_image(image_tensor,emboss_depth=60, light_angle=135, light_intensity=0.8, edge_threshold=30):
+    # 将torch.Tensor转换为numpy数组
+    image = image_tensor.numpy().squeeze()
+    # 将numpy数组转换为PIL图像
+    image = Image.fromarray((image * 255).astype(np.uint8))
+    # 在给定的尺寸上，将图片粘贴到一个带有填充颜色的背景上
+    image = jade_emboss(image, emboss_depth, light_angle, light_intensity, edge_threshold)
+    # 将PIL图像转换回numpy数组
+    image = np.array(image).astype(np.float32) / 255.0
+    # 将numpy数组转换回torch.Tensor
+    image_tensor = torch.from_numpy(image)[None,]
+    return image_tensor
+
+
+def jade_emboss(img_pil, emboss_depth=60, light_angle=135, light_intensity=0.8, edge_threshold=30):
+    # Open image
+    # img = Image.open(image_path).convert('L')  # Convert to grayscale
+    img = img_pil.convert('L')  # Convert to grayscale
+    img_array = np.array(img)
+
+    # Sobel edge detection kernel
+    sobel_x = np.array([[-1, 0, 1],
+                        [-2, 0, 2],
+                        [-1, 0, 1]])
+
+    sobel_y = np.array([[1, 2, 1],
+                        [0, 0, 0],
+                        [-1, -2, -1]])
+
+    # Apply Sobel edge detection
+    edges_x = np.abs(convolve(img_array, sobel_x))
+    edges_y = np.abs(convolve(img_array, sobel_y))
+    total_edges = edges_x + edges_y
+
+    # Apply edge threshold
+    total_edges[total_edges < edge_threshold] = 0
+
+    # Calculate gradient direction
+    gradient_direction = np.arctan2(edges_y, edges_x) * 180 / np.pi
+
+    # Calculate light direction
+    light_x = np.cos(np.deg2rad(light_angle))
+    light_y = np.sin(np.deg2rad(light_angle))
+
+    # Compute illumination
+    illumination = light_intensity * (light_x * edges_x + light_y * edges_y)
+
+    # Calculate emboss value
+    emboss = total_edges + emboss_depth
+    # Apply illumination
+    emboss_with_light = np.clip(emboss + illumination, 0, 255).astype(np.uint8)
+    # Create PIL Image
+    emboss_img = Image.fromarray(emboss_with_light)
+    # Save the embossed image
+    # emboss_img.save(output_path)
+    # Show the embossed image
+    # emboss_img.show() 
+    return emboss_img
+
+def convolve(image, kernel):
+    kernel_height, kernel_width = kernel.shape
+    image_height, image_width = image.shape
+    output = np.zeros_like(image)
+    pad_height = kernel_height // 2
+    pad_width = kernel_width // 2
+    padded_image = np.pad(image, ((pad_height, pad_height), (pad_width, pad_width)), mode='edge')
+    for y in range(image_height):
+        for x in range(image_width):
+            output[y, x] = np.sum(kernel * padded_image[y:y + kernel_height, x:x + kernel_width])
+    return output
+
