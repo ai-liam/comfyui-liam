@@ -21,8 +21,8 @@ class PreviewReliefImage:
                 "image": ("IMAGE",),
                 "emboss_depth": ("INT", { "default": 60, "min": 0, "max": 100, "step": 1, }),
                 "light_angle": ("INT", { "default": 135, "min": 0, "max": 360, "step": 1, }),
-                "light_intensity": ("INT", { "default": 0.8, "min": 0, "max": 1, "step": 0.1, }),
-                "edge_threshold": ("INT", { "default": 30, "min": 0, "max": 100, "step": 5, }), 
+                "light_intensity": ("FLOAT", { "default": 0.80, "min": 0.0, "max": 1.0, "step": 0.01, }),
+                "edge_threshold": ("INT", { "default": 30, "min": 0, "max": 100, "step": 1, }), 
             }
         }
     RETURN_TYPES = ("IMAGE",)
