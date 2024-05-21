@@ -3,6 +3,7 @@ import sys
 import os
 from PIL import Image
 import numpy as np
+import torch
 
 
 # 将RGB图像转换为灰度图像
@@ -61,3 +62,20 @@ def get_save_image_path(filename_prefix, output_dir, image_width=0, image_height
         os.makedirs(full_output_folder, exist_ok=True)
         counter = 1
     return full_output_folder, filename, counter, subfolder, filename_prefix
+
+# 将torch.Tensor转换为PIL图像
+def tensor_to_image_pil(tensor):
+    # 将torch.Tensor转换为numpy数组
+    image2 = tensor.numpy().squeeze()
+    # 将numpy数组转换为PIL图像
+    image2 = Image.fromarray((image2 * 255).astype(np.uint8))
+    return image2
+
+
+# 将torch.Tensor转换为PIL图像
+def image_pil_to_tensor(image_pil):
+    # 将PIL图像转换回numpy数组
+    image = np.array(image_pil).astype(np.float32) / 255.0
+    # 将numpy数组转换回torch.Tensor
+    image_tensor = torch.from_numpy(image)[None,]
+    return image_tensor

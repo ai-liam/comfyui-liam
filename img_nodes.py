@@ -13,6 +13,24 @@ import lib_img
 import folder_paths
 
 
+class GetBetterDepthImage:
+    @classmethod
+    def INPUT_TYPES(s):
+        return { "required": {
+                "image1": ("IMAGE",),
+                "image2": ("IMAGE",),
+            }
+        }
+    RETURN_TYPES = ("IMAGE",)
+    RETURN_NAMES = ("IMAGE",)
+    FUNCTION = "execute"
+    CATEGORY = "Liam/Image"
+
+    def execute(self,image1, image2):
+        print(f"""Your input contains:GetBetterDepthImage
+            """)
+        outputs = lib_utils.check_better_depth_image(image1,image2)
+        return (outputs, )
 
 class PreviewReliefImage:
     @classmethod

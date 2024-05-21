@@ -2,11 +2,12 @@ import sys
 import os
 from PIL import Image, ImageOps
 # import folder_paths
+import cv2
 import torch
 import numpy as np
 import requests
 from io import BytesIO
-
+import lib_img
 
 path = os.path.dirname(os.path.realpath(__file__))
 
@@ -174,3 +175,39 @@ def convolve(image, kernel):
             output[y, x] = np.sum(kernel * padded_image[y:y + kernel_height, x:x + kernel_width])
     return output
 
+
+# 将RGB图像转换为灰度图像
+def check_better_depth_image(image_tensor,image_tensor2):
+    # 将torch.Tensor转换为numpy数组
+    image_pil1 = lib_img.tensor_to_image_pil(image_tensor)
+    image_pil2 = lib_img.tensor_to_image_pil(image_tensor2)
+    image_pil = compare_image_levels_bast(image_pil1=image_pil1, image_pil2=image_pil2)
+    # 将PIL图像转换回numpy数组
+    # 将numpy数组转换回torch.Tensor
+    image_tensor = lib_img.image_pil_to_tensor(image_pil)
+    return image_tensor
+
+# 2图比较，返回像素值大的图像
+def compare_image_levels_bast(image_pil1, image_pil2):
+    print("compare_image_levels_bast")
+    # 计算 count1 和 count2
+    threshold = 200
+    count1 = get_depth_pixel_count(image_pil1, threshold)
+    count2 = get_depth_pixel_count(image_pil2, threshold)
+    print(f'Number of pixels with intensity > {threshold} in Image 1: {count1} 2: {count2}')
+    # if count1 > 5000: # 优先选择1 
+    #     return [image_pil1,image_pil2]
+    if count1 > count2:
+        return image_pil1
+    else:
+        return image_pil2
+
+# 计算深度图像中像素值大于 threshold 的像素数量
+def get_depth_pixel_count(image_pil, threshold,min_val=50, max_val=200):
+    # 转换 PIL 图像为 OpenCV 格式
+    open_cv_image = cv2.cvtColor(np.array(image_pil), cv2.COLOR_RGB2BGR)
+    # 计算直方图
+    histogram = cv2.calcHist([open_cv_image], [0], None, [256],  [min_val, max_val])
+    # 计算 Frequency 值大于 threshold 的数量
+    pixel_count = np.sum(histogram[threshold:])
+    return pixel_count
