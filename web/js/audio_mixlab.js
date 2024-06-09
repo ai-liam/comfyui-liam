@@ -52,7 +52,7 @@ function speakText (text) {
   // 语音合成结束时触发的事件
   speechMsg.onend = function (event) {
     console.log('语音播放结束')
-    window._mixlab_speech_synthesis_onend = true
+    window._liam_speech_synthesis_onend = true
   }
 
   // 语音合成错误时触发的事件
@@ -64,6 +64,18 @@ function speakText (text) {
   speechSynthesis.speak(speechMsg)
 }
 
+function get_language() {
+  let _lang = navigator.language
+  let lang = document.getElementsByName('_liam_speech_recognition_language');
+  if (lang && lang.length > 0 && lang[0].value) {
+    _lang = lang[0].value;
+  }else{
+    _lang =navigator.language
+  }
+  console.log('[INFO]语言：', _lang)
+  return _lang
+}
+
 // 调用方法，将文字转换为语音播放
 // speakText('Hello, how are you?');
 //                      #MixCopilot
@@ -72,16 +84,16 @@ const start = (element, id, startBtn, node) => {
   startBtn.className = 'loading_mixlab'
 
   window.recognition = new webkitSpeechRecognition()
-
   window.recognition.continuous = true
   window.recognition.interimResults = true
-  window.recognition.lang = navigator.language
+  let _lang = get_language()
+  window.recognition.lang = _lang
 
   let timeoutId, intervalId
 
   window.recognition.onstart = () => {
-    console.log('开始语音输入', window._mixlab_speech_synthesis_onend)
-    window._mixlab_speech_synthesis_onend = false
+    console.log('开始语音输入', window._liam_speech_synthesis_onend)
+    window._liam_speech_synthesis_onend = false
   }
 
   window.recognition.onresult = function (event) {
@@ -122,7 +134,7 @@ const start = (element, id, startBtn, node) => {
         if (
           app.ui.lastQueueSize === 0 &&
           !window.recognition &&
-          window._mixlab_speech_synthesis_onend
+          window._liam_speech_synthesis_onend
         ) {
           start(element, id, startBtn, node)
           startBtn.innerText = 'STOP'
@@ -177,6 +189,7 @@ app.registerExtension({
 
   async beforeRegisterNodeDef (nodeType, nodeData, app) {
     if (nodeType.comfyClass == 'SpeechRecognitionLiam') {
+      console.log('###SpeechRecognitionLiam 24-0609-1143')
       const orig_nodeCreated = nodeType.prototype.onNodeCreated
       nodeType.prototype.onNodeCreated = function () {
         orig_nodeCreated?.apply(this, arguments)
@@ -236,6 +249,16 @@ app.registerExtension({
 
           startBtn.innerText = 'START'
 
+          // input
+          const inputBox = document.createElement('input');
+          inputBox.name = "_liam_speech_recognition_language";
+          inputBox.type = 'text';
+          inputBox.style = `margin-top: 30px; font-size: 12px; width:100px; height: 18px; border-radius: 4px; border: 1px solid #ccc; padding: 1px;`
+          inputBox.value = navigator.language;
+          inputBox.placeholder = '请输入语言...';
+
+
+          div.appendChild(inputBox);
           div.appendChild(startBtn)
           // div.appendChild(sendTo);
           div.appendChild(textArea)
@@ -340,6 +363,7 @@ app.registerExtension({
   }
 })
 
+// https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis/speak
 app.registerExtension({
   name: 'Liam.audio.SpeechSynthesis',
   async beforeRegisterNodeDef (nodeType, nodeData, app) {
