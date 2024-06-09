@@ -9,6 +9,7 @@ sys.path.append(path+"/../../")
 import img_nodes
 import text_nodes
 from .Audio import SpeechRecognition, SpeechSynthesis
+from .llm_ai_store import AiStoreAzureGPTNode
 #sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "comfy"))
 
 
@@ -24,6 +25,7 @@ NODE_CLASS_MAPPINGS = {
 
     "SpeechRecognitionLiam": SpeechRecognition,
     "SpeechSynthesisLiam": SpeechSynthesis,
+    "AiStoreAzureGPTLiam": AiStoreAzureGPTNode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -38,4 +40,5 @@ NODE_DISPLAY_NAME_MAPPINGS = {
 
     "SpeechRecognitionLiam": "SpeechRecognition @Liam",
     "SpeechSynthesisLiam": "SpeechSynthesis @Liam",
+    "AiStoreAzureGPTLiam": "AiStoreAzureGPT @Liam",
 }
