@@ -8,7 +8,7 @@ sys.path.append(path+"/../../")
 
 import img_nodes
 import text_nodes
-
+from .Audio import SpeechRecognition, SpeechSynthesis
 #sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "comfy"))
 
 
@@ -21,6 +21,9 @@ NODE_CLASS_MAPPINGS = {
     "GetBetterDepthImage": img_nodes.GetBetterDepthImage ,
 
     "LiamLibSaveText": text_nodes.SaveText ,
+
+    "SpeechRecognitionLiam": SpeechRecognition,
+    "SpeechSynthesisLiam": SpeechSynthesis,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -32,4 +35,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "GetBetterDepthImage":  "Get Better Depth Image @Liam",
 
     "LiamLibSaveText": "Save Text @Liam",
+
+    "SpeechRecognitionLiam": "SpeechRecognition @Liam",
+    "SpeechSynthesisLiam": "SpeechSynthesis @Liam",
 }
