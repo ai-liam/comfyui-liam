@@ -7,7 +7,7 @@ sys.path.append(path)
 sys.path.append(path+"/../../")
 
 import img_nodes
-import text_nodes
+from .text_nodes import SaveText, MergeText,DisplayText
 from .Audio import SpeechRecognition, SpeechSynthesis
 from .llm_ai_store import AiStoreAzureGPTNode
 from .llm_ollama import OllamaApiTNode
@@ -22,7 +22,9 @@ NODE_CLASS_MAPPINGS = {
     "PreviewReliefImage": img_nodes.PreviewReliefImage ,
     "GetBetterDepthImage": img_nodes.GetBetterDepthImage ,
 
-    "LiamLibSaveText": text_nodes.SaveText ,
+    "LiamLibSaveText": SaveText ,
+    "LiamLibMergeText": MergeText ,
+    "LiamLibDisplayText": DisplayText ,
 
     "SpeechRecognitionLiam": SpeechRecognition,
     "SpeechSynthesisLiam": SpeechSynthesis,
@@ -39,6 +41,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "GetBetterDepthImage":  "Get Better Depth Image @Liam",
 
     "LiamLibSaveText": "Save Text @Liam",
+    "LiamLibMergeText": "Merge Text @Liam",
+    "LiamLibDisplayText": "Display Text @Liam",
 
     "SpeechRecognitionLiam": "SpeechRecognition @Liam",
     "SpeechSynthesisLiam": "SpeechSynthesis @Liam",

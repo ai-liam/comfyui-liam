@@ -34,3 +34,42 @@ class SaveText:
         lib_utils.write_txt(file_path,text)
         # print(f"Text saved at: {file_path}")
         return {"ui": {"text": text}, "result": (text,)}
+    
+
+class MergeText:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": { 
+                "text1": ("STRING", {"multiline": True, "default":"" , "dynamicPrompts": False}),
+                "text2": ("STRING", {"default": "," , "multiline": True, "dynamicPrompts": False}),
+                "text3": ("STRING", {"default": "", "multiline": True,"dynamicPrompts": False}),
+                         },
+            }
+    RETURN_TYPES = ( "STRING",)
+    FUNCTION = "execute"
+    CATEGORY = "Liam/text"
+    def execute(self,text1,text2,text3):
+        text = text1+text2+text3
+        return {"ui": {"text": text}, "result": (text,)}
+    
+class DisplayText:
+    def __init__(self):
+        pass
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": {        
+                "text": ("STRING", {"forceInput": True}),     
+                },
+            "hidden": {"prompt": "PROMPT", "extra_pnginfo": "EXTRA_PNGINFO"},
+            }
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("text",)
+    OUTPUT_NODE = True
+    FUNCTION = "execute"
+
+    CATEGORY = "Liam/text"
+
+    def execute(self, text, prompt=None, extra_pnginfo=None):
+        return {"ui": {"string": [text,]}, "result": (text,)}
