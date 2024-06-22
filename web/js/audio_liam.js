@@ -82,6 +82,10 @@ function get_language() {
 
 const start = (element, id, startBtn, node) => {
   startBtn.className = 'loading_mixlab'
+  console.log('[Record]开始语音 start:')
+  let speech_input = ""
+  window._liam_speech_input = ""
+
 
   window.recognition = new webkitSpeechRecognition()
   window.recognition.continuous = true
@@ -92,14 +96,37 @@ const start = (element, id, startBtn, node) => {
   let timeoutId, intervalId
 
   window.recognition.onstart = () => {
-    console.log('开始语音输入', window._liam_speech_synthesis_onend)
+    console.log('[Record] 开始录音')
     window._liam_speech_synthesis_onend = false
   }
 
   window.recognition.onresult = function (event) {
-    const result = event.results[event.results.length - 1][0].transcript
-    console.log('识别结果：', result)
-    element.value = result
+    let result =''
+    // get all text
+    let transcript = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      let item = event.results[i][0].transcript ;
+          transcript += item +",";
+          if (event.results[i].isFinal) {
+              console.log('[Record] Final transcript: ', item);
+              speech_input = speech_input+ transcript;
+              if(item && item.length>1) {
+                result = speech_input;
+                window._liam_speech_input = result ;
+                element.value = result
+              }
+          } else {
+              console.log('[Record] Interim transcript: ', item);
+              if(item && item.length>2){
+                result = speech_input+ transcript ;
+                element.value = result ;
+              } 
+          }
+    }
+    //const result = event.results[event.results.length - 1][0].transcript
+    result = window._liam_speech_input  ;
+    console.log('[Record] 识别结果：', result)
+    // element.value = result
 
     let data = getLocalData('_liam_speech_recognition')
     data[id] = result.trim()
@@ -110,8 +137,8 @@ const start = (element, id, startBtn, node) => {
     if (!window.recognition) return
 
     timeoutId = setTimeout(function () {
-      console.log('结果传递：：', result)
-
+      let result2 = window._liam_speech_input ;
+      console.log('[Record] 结果传递：：', result2)
       // 把数据发送到chatgpt的输入prompt里
       try {
         const sendToId = node.widgets.filter(
@@ -119,7 +146,7 @@ const start = (element, id, startBtn, node) => {
         )[0].value
         app.graph
           .getNodeById(sendToId)
-          .widgets.filter(w => w.name === 'prompt')[0].value = result
+          .widgets.filter(w => w.name === 'prompt')[0].value = result2
       } catch (error) {}
 
       setTimeout(() => app.queuePrompt(0, 1), 100)
@@ -147,15 +174,15 @@ const start = (element, id, startBtn, node) => {
   }
 
   window.recognition.onend = function () {
-    console.log('语音输入结束')
+    console.log('[Record] 语音输入结束')
   }
 
   window.recognition.onspeechend = function () {
-    console.log('onspeechend')
+    console.log('[Record] onspeechend')
   }
 
   window.recognition.onerror = function (event) {
-    console.log('Error occurred in recognition: ' + event.error)
+    console.log('[Record] Error occurred in recognition: ' + event.error)
   }
 
   window.recognition.start()
@@ -177,7 +204,7 @@ app.registerExtension({
           },
           async serializeValue (nodeId, widgetIndex) {
             let data = getLocalData('_liam_speech_recognition')
-            return data[node.id] || 'Hello Mixlab'
+            return data[node.id] || window._liam_speech_input || "" //'Hello Mixlab'
           }
         }
         //  widget.something = something;          // maybe adds stuff to it
