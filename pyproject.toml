@@ -1,0 +1,15 @@
+[project]
+name = "comfyui-liam"
+description = "Nodes: LiamLibLoadImage, LiamLibImageToGray, LiamLibSaveImg, LiamLibFillImage, PreviewReliefImage, GetBetterDepthImage, LiamLibSaveText"
+version = "1.0.0"
+license = "LICENSE"
+dependencies = ["opencv-python"]
+
+[project.urls]
+Repository = "https://github.com/ai-liam/comfyui-liam"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "comfyui-liam"
+Icon = ""
